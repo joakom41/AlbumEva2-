@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Galería de Arte - Inicio{% endblock %}
+
+{% block content %}
+
+    <style>
+        .album-hero {
+            background: linear-gradient(135deg, #f8f0f5 0%, #f0f4f8 50%, #f7f8fa 100%);
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+            letter-spacing: -0.02em;
+        }
+        
+        
+    </style>
+
+    <!-- Hero Section with Main Artwork -->
+    <section class="album-hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h2 class="hero-title">Obra Destacada</h2>
+                <p class="hero-subtitle">Descubre la belleza en cada trazo, la emoción en cada color</p>
+            </div>
+            
+            <!-- Featured Artwork -->
+            <div class="artwork-container">
+                <div class="artwork-frame">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.l3o_Qo-9tlEWr4uj5iRkEgAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" 
+                         alt="Obra de Arte Principal" 
+                         class="main-artwork">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">"Fleur en noir et blanc"</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

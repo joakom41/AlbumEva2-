@@ -1,0 +1,280 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Arte - Álbum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box;}
+        body {font-family:'Inter',sans-serif; line-height:1.6; color:#475569; background:#fefefe;}
+
+        .album-hero {background:linear-gradient(135deg,#f8f0f5,#f0f4f8); padding:100px 20px; text-align:center;}
+        .album-title {font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:600; color:#1e293b;}
+        .album-subtitle {font-size:1.2rem; color:#64748b; max-width:600px; margin:0 auto; font-weight:400; line-height:1.7;}
+
+        .gallery-section {padding:60px 20px; background:#fff;}
+        .gallery-container {max-width:1400px; margin:0 auto;}
+        .gallery-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:2.5rem;}
+
+        .artwork-card {background:white; border-radius:24px; overflow:hidden; box-shadow:0 4px 20px rgba(71,85,105,0.08); border:1px solid #f1f5f9; cursor:pointer; transition:0.3s;}
+        .artwork-card:hover {transform:translateY(-8px); box-shadow:0 20px 40px rgba(71,85,105,0.12);}
+        .artwork-image {width:100%; height:280px; object-fit:cover; transition: transform 0.3s;}
+        .artwork-card:hover .artwork-image {transform:scale(1.03);}
+        .artwork-details {padding:1.5rem;}
+        .artwork-name {font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:600; color:#1e293b; margin-bottom:0.5rem;}
+        .artwork-meta {color:#94a3b8; font-size:0.9rem;}
+        .like-btn {background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.9rem; display:flex; align-items:center; gap:0.3rem;}
+        .like-btn.liked {color:#f8a4c4;}
+
+        .modal-overlay {position:fixed;top:0;left:0;right:0;bottom:0; background:rgba(30,41,59,0.75); display:flex; align-items:center; justify-content:center; z-index:1000; padding:2rem; opacity:0; visibility:hidden; transition:0.3s;}
+        .modal-overlay.show {opacity:1; visibility:visible;}
+        .modal-content {background:white; border-radius:32px; max-width:900px; width:100%; max-height:90vh; overflow-y:auto; position:relative; transform:translateY(20px) scale(0.95); transition:0.3s; display:flex; flex-direction:column; border:1px solid #f1f5f9;}
+        .modal-overlay.show .modal-content {transform:translateY(0) scale(1);}
+        .modal-close {position:absolute;top:1rem; right:1rem; background:rgba(30,41,59,0.8); color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+        .modal-close:hover {background:rgba(30,41,59,0.9);}
+
+        .modal-body {display:flex; flex-wrap:wrap; padding:2rem; gap:2rem;}
+        .modal-image-container {flex:1 1 50%; min-width:300px;}
+        .modal-image {width:100%; height:auto; object-fit:cover; border-radius:16px;}
+        .modal-info {flex:1 1 50%; min-width:300px;}
+        .modal-title {font-family:'Playfair Display',serif; font-size:2rem; font-weight:600; color:#1e293b; margin-bottom:1rem;}
+        .modal-meta {display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;}
+        .meta-item {flex:1; min-width:120px;}
+        .meta-label {font-weight:600; color:#94a3b8; font-size:0.85rem; margin-bottom:0.3rem;}
+        .meta-value {color:#475569; font-weight:500; font-size:1rem;}
+        .modal-description {color:#64748b; line-height:1.6; margin-bottom:1.5rem;}
+        .modal-actions {display:flex; gap:1rem; flex-wrap:wrap;}
+        .action-btn {padding:10px 20px; border:1px solid #e2e8f0; border-radius:50px; background:white; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:0.3s;}
+        .action-btn:hover {background:#f8f9fa;}
+
+        @media(max-width:768px){.modal-body{flex-direction:column;}}
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="album-hero">
+        <h1 class="album-title">Colección de Arte</h1>
+        <p class="album-subtitle">Explora nuestra exclusiva selección de obras contemporáneas y clásicas</p>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery-section">
+        <div class="gallery-container">
+            
+           <div class="gallery-grid">
+
+                <!-- Artwork 1 -->
+                <div class="artwork-card" data-artwork="1">
+                    <img src="https://www.hispangallery.com/server/Portal_0002996/img/products/pintura-de-altea-de-constantino-penon-de-ifach-desde-altea-140x100-cm_9461798.jpg" alt="Altea painting" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Altea painting</h3>
+                        <p class="artwork-meta">Constantino • 1996</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">234</span></button>
+                    </div>
+                </div>
+
+                <!-- Artwork 2 -->
+                <div class="artwork-card" data-artwork="2">
+                    <img src="https://artpost.cl/sitioweb/wp-content/uploads/2022/07/Calle_de_Limache_Juan-Francisco-Gonzalez-patrimonio.cl_-768x468.jpg" alt="Calle de Limache" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Calle de Limache</h3>
+                        <p class="artwork-meta">Juan Francisco González • Desconocido</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">4856</span></button>
+                    </div>
+                </div>
+
+                 <!-- Artwork 3 -->
+                <div class="artwork-card" data-artwork="3">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTOKDsMJu52XdcnPBWGRTi4wNJ4bIUKLIMWv1kjRtaC7hje_TnoPHvbIP-bUui3W8VbMrku0SyaN_NaECCn38qZnLpygQn3lYP-YtAcJEU7JUbUzVBWnJuqgqyYbu7SWfkeiwCKM_PaXI/s1600/IMG-20150711-WA0004-1%255B1%255D.jpg" alt="Pintura Barniz" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Pintura en Barniz</h3>
+                        <p class="artwork-meta">L.E Fernadez • Desconocido</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">456</span></button>
+                    </div>
+                </div>
+
+                <!-- Artwork 4 -->
+                <div class="artwork-card" data-artwork="4">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8QzVh6mt39kf4dF8DxCN_Sm1I9GysRwkEGHMehTSEgGxwNBL5iuXgjC3QpZRm8nfebAvQ0BmYH2TSIbflHmuFokmpxAu2z7lsKNtFhUHpS-WEX5aLlNMn_WBFiDmW7HPK2lZGs4jdaYI/s1600/gup1%255B1%255D.jpg" alt="Pintura Barniz" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Arco de Tomé</h3>
+                        <p class="artwork-meta">L.E Fernadez • Desconocido</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">656</span></button>
+                    </div>
+                </div>
+
+                <!-- Artwork 5 -->
+                <div class="artwork-card" data-artwork="5">
+                    <img src="https://pinturachilena.cl/wp-content/uploads/2023/05/A.Orrego-Constitucion.jpg" alt="Constitucion" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Constitucion</h3>
+                        <p class="artwork-meta">Alberto Orrego Luco • Desconocido</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">2656</span></button>
+                    </div>
+                </div>
+
+                <!-- Artwork 6 -->
+                <div class="artwork-card" data-artwork="6">
+                    <img src="https://www.uc.cl/site/assets/files/13666/antunez.jpg" alt="Hombres y estatuas" class="artwork-image">
+                    <div class="artwork-details">
+                        <h3 class="artwork-name">Hombres y estatuas</h3>
+                        <p class="artwork-meta">Nemesio Antúnez • 1983</p>
+                        <button class="like-btn"><i class="fas fa-heart"></i> <span class="likes-count">4007</span></button>
+                    </div>
+                </div>
+           </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="artworkModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modalImage" src="" class="modal-image">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <div class="modal-meta">
+                        <div class="meta-item"><div class="meta-label">Artista</div><div id="modalArtist" class="meta-value"></div></div>
+                        <div class="meta-item"><div class="meta-label">Año</div><div id="modalYear" class="meta-value"></div></div>
+                        <div class="meta-item"><div class="meta-label">Técnica</div><div id="modalMedium" class="meta-value"></div></div>
+                        <div class="meta-item"><div class="meta-label">Dimensiones</div><div id="modalDimensions" class="meta-value"></div></div>
+                    </div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    <div class="modal-actions">
+                        <button class="action-btn" id="modalLikeBtn"><i class="fas fa-heart"></i> Me Gusta</button>
+                        <button class="action-btn"><i class="fas fa-share-alt"></i> Compartir</button>
+                        <button class="action-btn"><i class="fas fa-download"></i> Descargar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const artworksData = {
+            1: {
+                title: "Altea painting",
+                artist: "Constantino",
+                year: "1996",
+                medium: "Óleo sobre lienzo",
+                dimensions: "140 x 100 cm",
+                image: "https://www.hispangallery.com/server/Portal_0002996/img/products/pintura-de-altea-de-constantino-penon-de-ifach-desde-altea-140x100-cm_9461798.jpg",
+                description: "Esta hermosa pintura combina estilos con detalles cubistas y tonos naturales.",
+                likes: 234
+            },
+            2: {
+                title: "Calle de Limache",
+                artist: "Juan Francisco González",
+                year: "Desconocido",
+                medium: "Óleo sobre tela",
+                dimensions: "30 cm x 41 cm",
+                image: "https://artpost.cl/sitioweb/wp-content/uploads/2022/07/Calle_de_Limache_Juan-Francisco-Gonzalez-patrimonio.cl_-768x468.jpg",
+                description: "Obra del pintor chileno Juan Francisco González, perteneciente al Museo Nacional de Bellas Artes. Representa una escena urbana de la ciudad de Limache.",
+                likes: 4856
+            },
+            3: {
+                title: "Pintura en Barniz",
+                artist: "L.E Fernandez",
+                year: " ",
+                medium: "Óleo sobre tela",
+                dimensions: "Desconosidas",
+                image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTOKDsMJu52XdcnPBWGRTi4wNJ4bIUKLIMWv1kjRtaC7hje_TnoPHvbIP-bUui3W8VbMrku0SyaN_NaECCn38qZnLpygQn3lYP-YtAcJEU7JUbUzVBWnJuqgqyYbu7SWfkeiwCKM_PaXI/s1600/IMG-20150711-WA0004-1%255B1%255D.jpg",
+                description: "LEFP (L.E.Fernandez) Es un pintor chileno, que ha dado al pincel exhaustivo en la pintura dandole un aspecto personal y único en su técnica. LEFP nacido en Santiago, emergente en las pinturas, que le ha dado un barniz de brillo al arte chileno, que busca la simpleza como la temática hiperrealista.",
+                likes: 856
+            },
+            4: {
+                title: "Arco de Tomé",
+                artist: "L.E Fernandez",
+                year: " Desconocido",
+                medium: "Óleo sobre tela",
+                dimensions: "Desconosidas",
+                image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8QzVh6mt39kf4dF8DxCN_Sm1I9GysRwkEGHMehTSEgGxwNBL5iuXgjC3QpZRm8nfebAvQ0BmYH2TSIbflHmuFokmpxAu2z7lsKNtFhUHpS-WEX5aLlNMn_WBFiDmW7HPK2lZGs4jdaYI/s1600/gup1%255B1%255D.jpg",
+                description: "LEFP (L.E.Fernandez) Es un pintor chileno, que ha dado al pincel exhaustivo en la pintura dandole un aspecto personal y único en su técnica. LEFP nacido en Santiago, emergente en las pinturas, que le ha dado un barniz de brillo al arte chileno, que busca la simpleza como la temática hiperrealista.",
+                likes: 656
+            },
+            
+            5: {
+                title: "Constitucion",
+                artist: "Alberto Orrego Luco",
+                year: " Desconocido",
+                medium: "Óleo sobre arpillera",
+                dimensions: "60 x 100 cm",
+                image: "https://pinturachilena.cl/wp-content/uploads/2023/05/A.Orrego-Constitucion.jpg",
+                description: "Pintura hecha por Alberto Orregon Luco,utilizando la tecnica de Óleo sobre arpillera la cual reflaja un paisaje maritimo de Constitucion.",
+                likes: 2656
+            },
+
+            6: {
+                title: "Hombres y estatuas",
+                artist: "Nemesio Antúnez",
+                year: "1983",
+                medium: "Óleo sobre tela",
+                dimensions: "43 x 81 cm",
+                image: "https://www.uc.cl/site/assets/files/13666/antunez.jpg",
+                description: "Hombres y estatuas (1983), de Nemesio Antúnez, quien fuera, junto a otros artistas, uno de los fundadores de la Escuela de Arte UC.",
+                likes: 4007
+            },
+        };
+
+        const modal = document.getElementById('artworkModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalArtist = document.getElementById('modalArtist');
+        const modalYear = document.getElementById('modalYear');
+        const modalMedium = document.getElementById('modalMedium');
+        const modalDimensions = document.getElementById('modalDimensions');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalLikeBtn = document.getElementById('modalLikeBtn');
+
+        function showModal() {
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal() {
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 300);
+            document.body.style.overflow = 'auto';
+        }
+
+        closeModal.addEventListener('click', hideModal);
+        modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hideModal(); });
+
+        document.querySelectorAll('.artwork-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.getAttribute('data-artwork');
+                const data = artworksData[id];
+                if (!data) return;
+                modalImage.src = data.image;
+                modalTitle.textContent = data.title;
+                modalArtist.textContent = data.artist;
+                modalYear.textContent = data.year;
+                modalMedium.textContent = data.medium;
+                modalDimensions.textContent = data.dimensions;
+                modalDescription.textContent = data.description;
+                modalLikeBtn.dataset.id = id;
+                showModal();
+            });
+        });
+
+        modalLikeBtn.addEventListener('click', () => {
+            const id = modalLikeBtn.dataset.id;
+            artworksData[id].likes += 1;
+            document.querySelector(`.artwork-card[data-artwork="${id}"] .likes-count`).textContent = artworksData[id].likes;
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
